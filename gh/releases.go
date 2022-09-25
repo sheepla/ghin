@@ -18,7 +18,7 @@ type Release struct {
 	PublishedAt time.Time
 	ReleaseNote string
 	Author      string
-	Assets      *[]Asset
+	Assets      []Asset
 }
 
 type Asset struct {
@@ -93,7 +93,7 @@ func parseAsReleasesData(bytes []byte) (*[]Release, error) {
 	return &releases, nil
 }
 
-func parseAsAssetsData(data gjson.Result) *[]Asset {
+func parseAsAssetsData(data gjson.Result) []Asset {
 	//nolint:prealloc
 	var assets []Asset
 
@@ -111,5 +111,5 @@ func parseAsAssetsData(data gjson.Result) *[]Asset {
 		assets = append(assets, ast)
 	}
 
-	return &assets
+	return assets
 }

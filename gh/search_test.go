@@ -1,4 +1,4 @@
-//nolint:testpackge,paralleltest,gochecknoglobals
+//nolint
 package gh
 
 import (
@@ -58,12 +58,12 @@ func TestParseAsSearchResults(t *testing.T) {
 
 	for _, item := range *results {
 		t.Logf(
-			"%s/%s - %s (%dstars, %dforks)\n\n\n",
+			"%s/%s %dstars, %dforks\n%s\n\n",
 			item.Owner,
 			item.Name,
-			item.Description,
 			item.Stars,
 			item.Forks,
+			item.Description,
 		)
 	}
 }

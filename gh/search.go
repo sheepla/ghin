@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"net/url"
 	"time"
 
@@ -75,6 +74,7 @@ func Search(param *SearchParam) (*[]SearchResult, error) {
 
 	content, err := io.ReadAll(body)
 	if err != nil {
+		//nolint:goerr113
 		return nil, errors.New("failed to read response body")
 	}
 
@@ -86,36 +86,8 @@ func Search(param *SearchParam) (*[]SearchResult, error) {
 	return results, nil
 }
 
-//nolint:interfacer
-func fetch(url *url.URL) (io.ReadCloser, error) {
-	//nolint:noctx
-	req, err := http.NewRequest(http.MethodGet, url.String(), nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create the request: %w", err)
-	}
-
-	req.Header.Add("Accept", "application/vnd.github.v3+json")
-
-	//nolint:exhaustivestruct,exhaustruct
-	c := &http.Client{
-		Timeout: timeout * time.Second,
-	}
-
-	res, err := c.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch the result: %w", err)
-	}
-
-	if res.StatusCode < 200 || 300 <= res.StatusCode {
-		//nolint:goerr113
-		return nil, fmt.Errorf("http status error: %s", res.Status)
-	}
-
-	return res.Body, nil
-}
-
-func parseAsSearchResults(content []byte) (*[]SearchResult, error) {
-	if !gjson.ValidBytes(content) {
+func parseAsSearchResults(bytes []byte) (*[]SearchResult, error) {
+	if !gjson.ValidBytes(bytes) {
 		//nolint:goerr113
 		return nil, errors.New("invalid JSON format")
 	}
@@ -123,7 +95,7 @@ func parseAsSearchResults(content []byte) (*[]SearchResult, error) {
 	//nolint:prealloc
 	var results []SearchResult
 
-	items := gjson.GetBytes(content, "items")
+	items := gjson.GetBytes(bytes, "items")
 
 	for _, item := range items.Array() {
 		result := SearchResult{

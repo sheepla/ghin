@@ -18,7 +18,7 @@ It aims to simplify the installation of single-binary tools written in Go, Rust,
 
 ## License
 
-MIT
+> [MIT](https://github.com/sheepla/ghin/blob/master/LICENSE)
 
 ## Author
 

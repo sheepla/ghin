@@ -1,7 +1,7 @@
 
 <div align="center">
 
-# ghin
+# &#9196; ghin
 
 </div>
 
@@ -14,7 +14,7 @@
 ## About
 
 Many GitHub repositories have pre-built executables uploaded to their releases page.
-It aims to simplify the installation of single-binary tools written in Go, Rust, etc. , AppImage files, etc.
+This tool aims to simplify the installation of single-binary tools.
 
 ## License
 

@@ -42,13 +42,14 @@ func TestParseAsAssetsData(t *testing.T) {
 	}
 
 	for _, item := range *releases {
-		for _, a := range *item.Assets {
+		for _, a := range item.Assets {
 			t.Logf(
-				"%s (%d downloads)\nSize:%d, ContentType:%s\nDownload from: %s\n\n",
+				"%s (%d downloads)\n%d bytes, content type:%s, uploaded by %s\nDownload from: %s\n\n",
 				a.Name,
 				a.DownloadCount,
 				a.Size,
 				a.ContentType,
+				a.Uploader,
 				a.DownloadURL,
 			)
 		}

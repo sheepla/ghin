@@ -99,16 +99,16 @@ func parseAsSearchResults(bytes []byte) (*[]SearchResult, error) {
 
 	for _, item := range items.Array() {
 		result := SearchResult{
-			Owner:       gjson.Get(items.String(), "owner.login").String(),
-			Name:        gjson.Get(item.String(), "name").String(),
-			Description: gjson.Get(item.String(), "description").String(),
-			License:     gjson.Get(item.String(), "license").String(),
-			Size:        gjson.Get(item.String(), "size").Int(),
-			Stars:       gjson.Get(item.String(), "stargazers_count").Int(),
-			Forks:       gjson.Get(item.String(), "forks_count").Int(),
-			Language:    gjson.Get(item.String(), "language").String(),
-			CreatedAt:   gjson.Get(item.String(), "created_at").Time(),
-			UpdatedAt:   gjson.Get(item.String(), "updated_at").Time(),
+			Owner:       item.Get("owner.login").String(),
+			Name:        item.Get("name").String(),
+			Description: item.Get("description").String(),
+			License:     item.Get("license").String(),
+			Size:        item.Get("size").Int(),
+			Stars:       item.Get("stargazers_count").Int(),
+			Forks:       item.Get("forks_count").Int(),
+			Language:    item.Get("language").String(),
+			CreatedAt:   item.Get("created_at").Time(),
+			UpdatedAt:   item.Get("updated_at").Time(),
 		}
 
 		results = append(results, result)

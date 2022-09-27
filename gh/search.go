@@ -102,7 +102,7 @@ func parseAsSearchResults(bytes []byte) (*[]SearchResult, error) {
 			Owner:       item.Get("owner.login").String(),
 			Name:        item.Get("name").String(),
 			Description: item.Get("description").String(),
-			License:     item.Get("license").String(),
+			License:     item.Get("license").Get("name").String(),
 			Size:        item.Get("size").Int(),
 			Stars:       item.Get("stargazers_count").Int(),
 			Forks:       item.Get("forks_count").Int(),

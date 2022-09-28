@@ -1,82 +1,116 @@
-//nolint
 package main
 
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path"
 
-	"github.com/sheepla/ghin/gh"
-	"github.com/sheepla/ghin/ui"
+	cli "github.com/urfave/cli/v2"
 )
 
-// TODO: more elegant code
-func main() {
-	param := gh.NewSearchParam(os.Args[1])
+//nolint:gochecknoglobals
+var (
+	appName        = "ghin"
+	appVersion     = "unknown"
+	appDescription = "A GitHub releases installer"
+)
 
-	repos, err := gh.Search(param)
-	if err != nil {
-		log.Fatalln(err)
-	}
+type exitCode int
 
-	idx, err := ui.SelectRepo(*repos)
-	if err != nil {
-		log.Fatalln(err)
-	}
+const (
+	exitCodeOK exitCode = iota
+	exitCodeErrArgs
+)
 
-	fmt.Printf("%s/%s\n", (*repos)[idx].Owner, (*repos)[idx].Name)
-
-	releases, err := gh.GetReleases((*repos)[idx].Owner, (*repos)[idx].Name)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	fmt.Println(releases)
-
-	idx, err = ui.SelectTag((*releases))
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	assets := (*releases)[idx].Assets
-
-	idx, err = ui.SelectAsset(assets)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	url := assets[idx].DownloadURL
-	fmt.Println(url)
-
-	pwd, err := os.Getwd()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	download(url, pwd)
+func (code exitCode) Int() int {
+	return int(code)
 }
 
+func main() {
+	app := initApp()
+	if err := app.Run(os.Args); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+}
+
+func initApp() *cli.App {
+	//nolint:exhaustivestruct,exhaustruct
+	return &cli.App{
+		Name:        appName,
+		Version:     appVersion,
+		Usage:       appDescription,
+		Description: appDescription,
+		Suggest:     true,
+		Action: func(ctx *cli.Context) error {
+			if ctx.NArg() == 0 {
+				return cli.Exit("must require arguments", exitCodeErrArgs.Int())
+			}
+
+			return cli.Exit("", exitCodeOK.Int())
+		},
+		Commands: []*cli.Command{
+			{
+				Name:      "install",
+				Usage:     "Install releases",
+				Aliases:   []string{"i"},
+				ArgsUsage: "QUERY...",
+				Action:    runInstallCommand,
+			},
+			{
+				Name:      "remove",
+				Usage:     "Uninstall binaries",
+				Aliases:   []string{"r"},
+				ArgsUsage: "QUERY...",
+				Action:    runRemoveCommand,
+			},
+			{
+				Name:      "list",
+				Usage:     "List installed releases",
+				Aliases:   []string{"l"},
+				ArgsUsage: "[QUERY...]",
+				Action:    runListCommand,
+			},
+		},
+	}
+}
+
+func runInstallCommand(ctx *cli.Context) error {
+	return nil
+}
+
+func runRemoveCommand(ctx *cli.Context) error {
+	return nil
+}
+
+func runListCommand(ctx *cli.Context) error {
+	return nil
+}
+
+//nolint:deadcode,unused
 func download(url, destDir string) error {
+	//nolint:gosec,noctx
 	res, err := http.Get(url)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to fetch the file: %w", err)
 	}
 
 	defer res.Body.Close()
 
 	fname := path.Base(url)
+	fpath := path.Join(destDir, fname)
 
-	f, err := os.Create(path.Join(destDir, fname))
+	file, err := os.Create(fpath)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create the file: %w", err)
 	}
 
-	defer f.Close()
+	defer file.Close()
 
-	io.Copy(f, res.Body)
+	if _, err := io.Copy(file, res.Body); err != nil {
+		return fmt.Errorf("failed to write content into file: %w", err)
+	}
 
 	return nil
 }

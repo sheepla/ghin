@@ -59,7 +59,7 @@ func main() {
 	download(url, pwd)
 }
 
-func download(url string, dest string) error {
+func download(url, destDir string) error {
 	res, err := http.Get(url)
 	if err != nil {
 		return err
@@ -67,7 +67,9 @@ func download(url string, dest string) error {
 
 	defer res.Body.Close()
 
-	f, err := os.Create(path.Base(url))
+	fname := path.Base(url)
+
+	f, err := os.Create(path.Join(destDir, fname))
 	if err != nil {
 		return err
 	}

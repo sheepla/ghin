@@ -21,6 +21,8 @@ type Release struct {
 	Assets      []Asset
 }
 
+type Releases []Release
+
 type Asset struct {
 	Name          string
 	Size          int64
@@ -32,7 +34,9 @@ type Asset struct {
 	UpdatedAt     time.Time
 }
 
-func GetReleases(owner, repo string) (*[]Release, error) {
+type Assets []Asset
+
+func GetReleases(owner, repo string) (*Releases, error) {
 	url := releasesURL(owner, repo)
 
 	body, err := fetch(url)
@@ -65,7 +69,7 @@ func releasesURL(owner, repo string) *url.URL {
 	}
 }
 
-func parseAsReleasesData(bytes []byte) (*[]Release, error) {
+func parseAsReleasesData(bytes []byte) (*Releases, error) {
 	if !gjson.ValidBytes(bytes) {
 		//nolint:goerr113
 		return nil, errors.New("invalid JSON format")
@@ -74,7 +78,7 @@ func parseAsReleasesData(bytes []byte) (*[]Release, error) {
 	data := gjson.ParseBytes(bytes)
 
 	//nolint:prealloc
-	var releases []Release
+	var releases Releases
 
 	for _, item := range data.Array() {
 		rel := Release{
@@ -93,7 +97,7 @@ func parseAsReleasesData(bytes []byte) (*[]Release, error) {
 	return &releases, nil
 }
 
-func parseAsAssetsData(data gjson.Result) []Asset {
+func parseAsAssetsData(data gjson.Result) Assets {
 	//nolint:prealloc
 	var assets []Asset
 

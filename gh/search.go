@@ -27,7 +27,7 @@ type SearchParam struct {
 	// HasArchved   bool
 }
 
-type SearchResult struct {
+type Repo struct {
 	Owner       string
 	Name        string
 	License     string
@@ -39,6 +39,8 @@ type SearchResult struct {
 	Stars       int64
 	Forks       int64
 }
+
+type Repos []Repo
 
 func NewSearchParam(query string) *SearchParam {
 	return &SearchParam{
@@ -65,7 +67,7 @@ func (param *SearchParam) toQueryString() string {
 	return fmt.Sprintf("%s fork:false", param.Query)
 }
 
-func Search(param *SearchParam) (*[]SearchResult, error) {
+func Search(param *SearchParam) (*Repos, error) {
 	body, err := fetch(param.toURL())
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch the result: %w", err)
@@ -86,19 +88,19 @@ func Search(param *SearchParam) (*[]SearchResult, error) {
 	return results, nil
 }
 
-func parseAsSearchResults(bytes []byte) (*[]SearchResult, error) {
+func parseAsSearchResults(bytes []byte) (*Repos, error) {
 	if !gjson.ValidBytes(bytes) {
 		//nolint:goerr113
 		return nil, errors.New("invalid JSON format")
 	}
 
 	//nolint:prealloc
-	var results []SearchResult
+	var repos Repos
 
 	items := gjson.GetBytes(bytes, "items")
 
 	for _, item := range items.Array() {
-		result := SearchResult{
+		repo := Repo{
 			Owner:       item.Get("owner.login").String(),
 			Name:        item.Get("name").String(),
 			Description: item.Get("description").String(),
@@ -111,8 +113,8 @@ func parseAsSearchResults(bytes []byte) (*[]SearchResult, error) {
 			UpdatedAt:   item.Get("updated_at").Time(),
 		}
 
-		results = append(results, result)
+		repos = append(repos, repo)
 	}
 
-	return &results, nil
+	return &repos, nil
 }

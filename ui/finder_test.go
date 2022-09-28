@@ -8,7 +8,6 @@ import (
 	"github.com/sheepla/ghin/gh"
 )
 
-/*
 func TestFindRepo(t *testing.T) {
 	result := []gh.SearchResult{
 		{
@@ -44,7 +43,6 @@ func TestFindRepo(t *testing.T) {
 
 	t.Log(idx)
 }
-*/
 
 func TestSelectTag(t *testing.T) {
 	releases := []gh.Release{

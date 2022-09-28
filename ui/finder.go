@@ -8,36 +8,38 @@ import (
 	"github.com/sheepla/ghin/gh"
 )
 
-func SelectRepo(result []gh.SearchResult) (int, error) {
+const noResultsText = "NO RESULTS"
+
+func SelectRepo(repos gh.Repos) (int, error) {
 	//nolint:wrapcheck
 	return fzf.Find(
-		result,
+		repos,
 		func(i int) string {
-			return fmt.Sprintf("%s/%s", result[i].Owner, result[i].Name)
+			return fmt.Sprintf("%s/%s", repos[i].Owner, repos[i].Name)
 		},
 		//nolint:varnamelen
 		fzf.WithPreviewWindow(func(i, width, height int) string {
 			if i == -1 {
-				return "NO RESULTS"
+				return noResultsText
 			}
 
 			return fmt.Sprintf(
 				"%s/%s (%d stars, %d forks)\n\n%s\n\nlicense: %s\nlanguage: %s\ncreated at: %s\nupdated at: %s",
-				result[i].Owner,
-				result[i].Name,
-				result[i].Stars,
-				result[i].Forks,
-				result[i].Description,
-				result[i].License,
-				result[i].Language,
-				humanize.Time(result[i].CreatedAt),
-				humanize.Time(result[i].UpdatedAt),
+				repos[i].Owner,
+				repos[i].Name,
+				repos[i].Stars,
+				repos[i].Forks,
+				repos[i].Description,
+				repos[i].License,
+				repos[i].Language,
+				humanize.Time(repos[i].CreatedAt),
+				humanize.Time(repos[i].UpdatedAt),
 			)
 		}),
 	)
 }
 
-func SelectTag(releases []gh.Release) (int, error) {
+func SelectTag(releases gh.Releases) (int, error) {
 	//nolint:wrapcheck
 	return fzf.Find(
 		releases,
@@ -48,7 +50,7 @@ func SelectTag(releases []gh.Release) (int, error) {
 		//nolint:varnamelen
 		fzf.WithPreviewWindow(func(i, width, height int) string {
 			if i == -1 {
-				return "NO RESULTS"
+				return noResultsText
 			}
 
 			return fmt.Sprintf(
@@ -64,7 +66,7 @@ func SelectTag(releases []gh.Release) (int, error) {
 	)
 }
 
-func SelectAsset(assets []gh.Asset) (int, error) {
+func SelectAsset(assets gh.Assets) (int, error) {
 	//nolint:wrapcheck
 	return fzf.Find(
 		assets,

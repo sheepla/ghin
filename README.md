@@ -1,3 +1,8 @@
+<div align="right">
+
+[![golangci-lint](https://github.com/sheepla/ghin/actions/workflows/ci.yml/badge.svg)](https://github.com/sheepla/ghin/actions/workflows/ci.yml)
+
+</div>
 
 <div align="center">
 

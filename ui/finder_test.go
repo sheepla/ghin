@@ -9,7 +9,7 @@ import (
 )
 
 func TestFindRepo(t *testing.T) {
-	result := []gh.SearchResult{
+	result := gh.Repos{
 		{
 			Owner:       "sheepla",
 			Name:        "myrepo",

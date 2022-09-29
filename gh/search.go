@@ -80,7 +80,7 @@ func Search(param *SearchParam) (*Repos, error) {
 		return nil, errors.New("failed to read response body")
 	}
 
-	results, err := parseAsSearchResults(content)
+	results, err := parseAsReposData(content)
 	if err != nil {
 		return nil, fmt.Errorf("parse error: %w", err)
 	}
@@ -88,7 +88,7 @@ func Search(param *SearchParam) (*Repos, error) {
 	return results, nil
 }
 
-func parseAsSearchResults(bytes []byte) (*Repos, error) {
+func parseAsReposData(bytes []byte) (*Repos, error) {
 	if !gjson.ValidBytes(bytes) {
 		//nolint:goerr113
 		return nil, errors.New("invalid JSON format")

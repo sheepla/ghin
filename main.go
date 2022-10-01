@@ -14,7 +14,8 @@ import (
 var (
 	appName        = "ghin"
 	appVersion     = "unknown"
-	appDescription = "A GitHub releases installer"
+	appUsage       = "A GitHub releases installer"
+	appDescription = "A GitHub releases installer with APT-like sub commands and fzf-like interactive UI"
 )
 
 type exitCode int
@@ -40,7 +41,7 @@ func initApp() *cli.App {
 	return &cli.App{
 		Name:        appName,
 		Version:     appVersion,
-		Usage:       appDescription,
+		Usage:       appUsage,
 		Description: appDescription,
 		Suggest:     true,
 		Action: func(ctx *cli.Context) error {

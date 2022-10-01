@@ -101,7 +101,6 @@ func parseAsAssetsData(data gjson.Result) Assets {
 	//nolint:prealloc
 	var assets []Asset
 
-	//nolint:exhaustivestruct,exhaustruct
 	for _, item := range data.Get("assets").Array() {
 		ast := Asset{
 			Name:          item.Get("name").String(),
@@ -110,6 +109,8 @@ func parseAsAssetsData(data gjson.Result) Assets {
 			Size:          item.Get("size").Int(),
 			DownloadCount: item.Get("download_count").Int(),
 			DownloadURL:   item.Get("browser_download_url").String(),
+			CreatedAt:     item.Get("created_at").Time(),
+			UpdatedAt:     item.Get("updated_at").Time(),
 		}
 
 		assets = append(assets, ast)

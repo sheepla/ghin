@@ -13,7 +13,7 @@
 
 <div align="center">
 
-GitHub-INstaller - A command line tool to install executable(s) from GitHub releases quickly with interactive UI
+GitHub-INstaller - A command line tool to install executable(s) from GitHub releases quickly with interactive UI inspired by [jiro4989/relma](https://github.com/jiro4989/relma), [Songmu/ghg](https://github.com/Songmu/ghg), [redraw/gh-install](https://github.com/redraw/gh-install), [Scoop](https://github.com/ScoopInstaller/Scoop), and others
 
 *This tool is still under development. Specifications are subject to change without notice.*
 
@@ -49,3 +49,12 @@ Please see issue page.
 ## Author
 
 > [Sheepla](https://github.com/sheepla)
+
+## Thanks
+
+- [jiro4989/relma](https://github.com/jiro4989/relma)
+- [Songmu/ghg](https://github.com/Songmu/ghg)
+- [redraw/gh-install](https://github.com/redraw/gh-install)
+- [Scoop](https://github.com/ScoopInstaller/Scoop)
+- ... and more!
+

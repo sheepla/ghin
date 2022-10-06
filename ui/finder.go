@@ -10,9 +10,9 @@ import (
 
 const noResultsText = "NO RESULTS"
 
-func SelectRepo(repos gh.Repos) (int, error) {
-	//nolint:wrapcheck
-	return fzf.Find(
+//nolint:wrapcheck
+func SelectRepo(repos gh.Repos) (*gh.Repo, error) {
+	idx, err := fzf.Find(
 		repos,
 		func(i int) string {
 			return fmt.Sprintf("%s/%s", repos[i].Owner, repos[i].Name)
@@ -37,14 +37,16 @@ func SelectRepo(repos gh.Repos) (int, error) {
 			)
 		}),
 	)
+
+	return &repos[idx], err
 }
 
-func SelectTag(releases gh.Releases) (int, error) {
-	//nolint:wrapcheck
-	return fzf.Find(
-		releases,
+//nolint:wrapcheck
+func SelectTag(rels gh.Releases) (*gh.Release, error) {
+	idx, err := fzf.Find(
+		rels,
 		func(i int) string {
-			return releases[i].Tag
+			return rels[i].Tag
 		},
 
 		//nolint:varnamelen
@@ -55,20 +57,22 @@ func SelectTag(releases gh.Releases) (int, error) {
 
 			return fmt.Sprintf(
 				"%s\n\nby %s\n\ncreated at: %s, published at: %s\n\nSee release page: %s\n\n─────────\n\n%s\n\n─────────\n\n",
-				releases[i].Tag,
-				releases[i].Author,
-				humanize.Time(releases[i].CreatedAt),
-				humanize.Time(releases[i].PublishedAt),
-				releases[i].PageURL,
-				releases[i].ReleaseNote,
+				rels[i].Tag,
+				rels[i].Author,
+				humanize.Time(rels[i].CreatedAt),
+				humanize.Time(rels[i].PublishedAt),
+				rels[i].PageURL,
+				rels[i].ReleaseNote,
 			)
 		}),
 	)
+
+	return &rels[idx], err
 }
 
-func SelectAsset(assets gh.Assets) (int, error) {
-	//nolint:wrapcheck
-	return fzf.Find(
+//nolint:wrapcheck
+func SelectAsset(assets gh.Assets) (*gh.Asset, error) {
+	idx, err := fzf.Find(
 		assets,
 		func(i int) string {
 			size := humanize.Bytes(uint64(assets[i].Size))
@@ -79,7 +83,7 @@ func SelectAsset(assets gh.Assets) (int, error) {
 		//nolint:varnamelen
 		fzf.WithPreviewWindow(func(i, width, height int) string {
 			if i == -1 {
-				return "NO RESULTS"
+				return noResultsText
 			}
 
 			size := humanize.Bytes(uint64(assets[i].Size))
@@ -93,4 +97,6 @@ func SelectAsset(assets gh.Assets) (int, error) {
 			)
 		}),
 	)
+
+	return &assets[idx], err
 }

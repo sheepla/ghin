@@ -8,7 +8,7 @@ require (
 	github.com/mholt/archiver/v4 v4.0.0-alpha.7
 	github.com/peteole/testdata-loader v0.3.0
 	github.com/tidwall/gjson v1.14.3
-	github.com/urfave/cli/v2 v2.23.5
+	github.com/urfave/cli/v2 v2.23.7
 )
 
 require (

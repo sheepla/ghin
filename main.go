@@ -1,12 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/sheepla/ghin/gh"
@@ -160,17 +161,18 @@ func selectAsset(repo *gh.Repo) (*gh.Asset, error) {
 	return ast, nil
 }
 
-func download(u *url.URL, destDir string) error {
+//nolint:interfacer
+func download(srcURL *url.URL, destDir string) error {
 	//nolint:noctx
-	res, err := http.Get(u.String())
+	res, err := http.Get(srcURL.String())
 	if err != nil {
 		return fmt.Errorf("failed to fetch the file: %w", err)
 	}
 
 	defer res.Body.Close()
 
-	fname := path.Base(u.String())
-	fpath := path.Join(destDir, fname)
+	fname := filepath.Base(srcURL.String())
+	fpath := filepath.Join(destDir, fname)
 
 	file, err := os.Create(fpath)
 	if err != nil {
@@ -179,7 +181,9 @@ func download(u *url.URL, destDir string) error {
 
 	defer file.Close()
 
-	if _, err := io.Copy(file, res.Body); err != nil {
+	buf := bufio.NewWriter(file)
+
+	if _, err := io.Copy(buf, res.Body); err != nil {
 		return fmt.Errorf("failed to write content into file %s: %w", fpath, err)
 	}
 

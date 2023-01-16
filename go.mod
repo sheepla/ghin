@@ -3,7 +3,7 @@ module github.com/sheepla/ghin
 go 1.19
 
 require (
-	github.com/dustin/go-humanize v1.0.0
+	github.com/dustin/go-humanize v1.0.1
 	github.com/ktr0731/go-fuzzyfinder v0.7.0
 	github.com/mholt/archiver/v4 v4.0.0-alpha.7
 	github.com/peteole/testdata-loader v0.3.0
